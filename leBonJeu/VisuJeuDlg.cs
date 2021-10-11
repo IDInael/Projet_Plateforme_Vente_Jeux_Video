@@ -8,52 +8,98 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace leBonJeu
+namespace LeBonJeu
 {
     public partial class VisuJeuDlg : Form
     {
-        private LesJeux lstJeu;
+        LesJeux lj;
         public VisuJeuDlg()
         {
             InitializeComponent();
-            initArbre();
+            this.lj = new LesJeux();
         }
 
-        public VisuJeuDlg(LesJeux lj)
+        public VisuJeuDlg(LesJeux liste)
         {
             InitializeComponent();
-            this.lstJeu = lj;
+            this.lj = liste;
             initArbre();
+            initListe();
+        }
+
+        private void Fermer_Click(object sender, EventArgs e)
+        {
+            this.Visible = false;
+            this.Dispose();
         }
 
         private void initArbre()
         {
-            foreach (Genre cr in Enum.GetValues(typeof(Genre)))
+            TreeNode nd,nf;//noeud parent et noeud fils
+            foreach(Genre g in Enum.GetValues(typeof(Genre)))
             {
-                TreeNode n0 = new TreeNode(cr.ToString());
-                LesJeux lj = lstJeu.getByGenre(cr);
-                foreach (Jeu j in lj.LstJeu)
+                LesJeux liste = lj.getByGenre(g);
+                String s= Enum.Format(typeof(Genre), g, "g");
+                nd = new TreeNode(s);
+
+                foreach(Jeu j in liste.Liste)
                 {
-                    TreeNode n1 = new TreeNode(j.Nom);
-                    n0.Nodes.Add(n1);
+                    nf = new TreeNode(j.Nom);
+                    nd.Nodes.Add(nf);
                 }
-                arbre.Nodes.Add(n0);
+                Arbre.Nodes.Add(nd);
             }
         }
 
-        private void arbre_AfterSelect(object sender, TreeViewEventArgs e)
+        private void initListe()
         {
-            TreeView tv = (TreeView)sender;
-            TreeNode nd = tv.SelectedNode;
-            Jeu j = this.lstJeu.getByNom(nd.Text);
+            foreach(Jeu j in lj.Liste)
+            {
+                liste.Items.Add(j.Nom);
+            }
+        }
 
+        private void Fermer_Click_1(object sender, EventArgs e)
+        {
+            this.Visible = false;
+            this.Dispose();
+        }
+
+        private void Arbre_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            TreeNode node = e.Node;
+            String nom = node.Text;
+            Jeu j = lj.getByNom(nom);
+            afficheJeu(j);
+        }
+
+        private void afficheJeu(Jeu j)
+        {
             if(j!=null)
             {
-                edition.Text = j.ToString();
-                Image img = j.Photo;
-                image.Image=img.GetThumbnailImage(image.Width, image.Height, null, IntPtr.Zero);
+                Galerie.Image = null;
+                Edition.Text = j.ToString();
+                Photo.Image = j.Photo.GetThumbnailImage(Photo.Width, Photo.Height, null, IntPtr.Zero);
+
+                if(j.GetType()==typeof(JeuRetro))
+                {
+                    Image img = ((JeuRetro)j).Galerie;
+                    if (img != null)
+                        Galerie.Image = img.GetThumbnailImage(Galerie.Width, Galerie.Height, null, IntPtr.Zero);
+                    else
+                        Galerie.Image = img;
+                }
+                
             }
         }
+
+
+
+        private void liste_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            int i = liste.SelectedIndex;
+            Jeu j = lj.getJeuAt(i);
+            afficheJeu(j);
+        }
     }
-    
 }

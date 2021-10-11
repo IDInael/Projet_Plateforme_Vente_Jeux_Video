@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace leBonJeu
+namespace LeBonJeu
 {
     class JeuRetro : Jeu
     {
         private String etat;
         private bool notice;
-        private List<Image> galerie;
+        private Image galerie;
 
         public String Etat 
         {
@@ -22,20 +22,20 @@ namespace leBonJeu
         { get { return this.notice; }
             set { this.notice = value; }
         }
-        public List<Image> Galerie { get; set; }
+        public Image Galerie { get; set; }
 
         public JeuRetro() : base()
         {
             Etat = "";
             Notice = false;
-            Galerie = new List<Image>();
+            Galerie = null;
         }
 
-        public JeuRetro(String nom, String desc, String plateforme, String genre, String editeur, double prix, DateTime date, bool r, String etat, bool notice) : base(nom, desc, plateforme, genre, editeur, prix, date, r)
+        public JeuRetro(String nom, String desc, String plateforme, String genre, String editeur, double prix, DateTime date, bool r, String et, bool not) : base(nom, desc, plateforme, genre, editeur, prix, date, r)
         {
-            Etat = etat;
-            Notice = notice;
-            Galerie = new List<Image>();
+            Etat = et;
+            Notice = not;
+            Galerie = null;
         }
 
         public JeuRetro(JeuRetro j) : base(j)
@@ -43,6 +43,13 @@ namespace leBonJeu
             Etat = j.Etat;
             Notice = j.Notice;
             Galerie = j.Galerie;
+        }
+
+        public JeuRetro(Jeu j,string et, bool not):base(j)
+        {
+            Etat = et;
+            Notice = not;
+            Galerie = null;
         }
 
         public override void Saisie()

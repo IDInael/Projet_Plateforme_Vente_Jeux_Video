@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace leBonJeu
+namespace LeBonJeu
 {
     static class Program
     {
@@ -16,7 +16,7 @@ namespace leBonJeu
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Fenetre());
+            Application.Run(new Accueil());
         }
     }
 }

@@ -5,73 +5,57 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace leBonJeu
+namespace LeBonJeu
 {
-    public class Jeu : IEquatable<Jeu>, IComparable<Jeu>
+    public class Jeu : Produit
     {
-        private String nom;
-        private String desc;
         private string plateforme;
         private Genre genre;
         private string editeur;
-        private double prix;
         private DateTime date_Sortie;
         private Boolean recondition;
-        private Image photo;
 
-        public Jeu()
+        public Jeu() : base()
         {
-            this.nom = "Default";
-            this.desc = "";
             this.plateforme = "";
-            this.genre = Genre.Default;
+            this.genre = Genre.Autres;//genre par defaut
             this.editeur = "";
-            this.prix = 0.0;
-            this.date_Sortie = new DateTime();
+            this.date_Sortie = DateTime.Today;//date par defaut est la date du jour
             this.recondition = false;
-            this.photo = null;
         }
 
-        public Jeu(Jeu j)
+        public Jeu(string s) : base()
+        {
+            this.Nom = s;
+        }
+
+        public Jeu(Jeu j) : base()
         {
             if (j != null)
             {
-                this.nom = j.Nom;
-                this.desc = j.Desc;
+                this.Nom = j.Nom;
+                this.Desc = j.Desc;
+                this.Prix = j.Prix;
                 this.plateforme = j.Plateforme;
                 this.genre = j.getGenre;
                 this.editeur = j.editeur;
-                this.prix = j.Prix;
                 this.date_Sortie = j.Date_Sortie;
                 this.recondition = j.Recondition;
-                this.photo = j.Photo;
+                this.Photo = j.Photo;
             }
         }
 
-        public Jeu(String nom, String desc, String plateforme, String genre, String editeur, double prix, DateTime date, bool r)
+        public Jeu(String nom, String desc, String plateforme, String genre, String editeur, double prix, DateTime date, bool r) : base(nom, desc, prix)
         {
-            this.nom = nom;
-            this.desc = desc;
             this.plateforme = plateforme;
             this.GenreS = genre;
             this.editeur = editeur;
-            this.prix = prix;
+            // this.prix = prix;
             this.date_Sortie = date;
             this.recondition = r;
-            this.photo = null;
         }
 
-        public String Nom
-        {
-            get { return this.nom; }
-            set { this.nom = value; }
-        }
 
-        public String Desc
-        {
-            get { return this.desc; }
-            set { this.desc = value; }
-        }
 
         public String Plateforme
         {
@@ -85,6 +69,11 @@ namespace leBonJeu
             set { this.genre = (Genre)Enum.Parse(typeof(Genre), value, true); }
         }
 
+        public Genre GenreG
+        {
+            set { this.genre = value; }
+        }
+
         public String Editeur
         {
             get { return this.editeur; }
@@ -96,11 +85,12 @@ namespace leBonJeu
             get { return this.genre; }
         }
 
-        public double Prix
+        public int indexGenre
         {
-            get { return this.prix; }
-            set { this.prix = value; }
+            get { return (int)this.genre; }
         }
+
+
 
         public DateTime Date_Sortie
         {
@@ -114,27 +104,16 @@ namespace leBonJeu
             set { this.recondition = value; }
         }
 
-        public Image Photo
-        {
-            get { return this.photo; }
-            set
-            {
-                if (value != null)
-                {
-                    this.photo = value;
-                }
-            }
-        }
 
         public override string ToString()
         {
-            String res = "Nom : " + this.nom + "\n";
+            String res = base.ToString();
             res += "Plateforme : " + this.plateforme + "\n";
             res += "Genre : " + GenreS + "\n";
             res += "Editeur : " + this.editeur + "\n";
-            res += "Prix : " + Prix + "\n";
             res += "Sortie : " + this.date_Sortie.ToLongDateString() + "\n";
-           // res += "\t" + this.desc + "\n";
+            res += "Jeu reconditionné : " + this.Recondition;
+            res += "\n\"" + this.Desc + "\"\n";
 
             return res;
         }
@@ -151,16 +130,25 @@ namespace leBonJeu
             Console.Write(" Description : "); Desc = Console.ReadLine();
         }
 
+        /**
+         * surcharge de la methode equals de IEquatable
+         *
+        
         public override bool Equals(object obj)
         {
             Jeu j = obj as Jeu;
-
+            /*
+             * on considere que deux jeux sont les memes s'ils ont le meme nom et peut se jouer sur le meme plateforme
+             *
             if (j != null)
-                return this.nom.Equals(j.Nom) && this.plateforme.Equals(j.Plateforme) && this.editeur.Equals(j.Editeur);
+                return this.Nom.Equals(j.Nom) && this.plateforme.Equals(j.Plateforme);
             else
                 return false;
         }
 
+        /**
+         * methode equals de la classe jeu
+         *
         public bool Equals(Jeu other)
         {
             if (other == null)
@@ -171,7 +159,7 @@ namespace leBonJeu
             {
                 return Nom.Equals(other.Nom);
             }
-        }
+        }*/
 
         public static bool operator ==(Jeu j1, Jeu j2)
         {
@@ -191,51 +179,10 @@ namespace leBonJeu
             return this.ToString().GetHashCode();
         }
 
-        public int CompareTo(Jeu other)
-        {
-            if (other == null)
-                return 7;
-            else
-                return Nom.CompareTo(other.Nom);
-        }
-
-        public static bool operator >(Jeu j1, Jeu j2)
-        {
-            if (j1 == null)
-                return false;
-            else
-                return j1.CompareTo(j2) == 1;
-        }
-
-        public static bool operator >=(Jeu j1, Jeu j2)
-        {
-            if (j1 == null)
-                return j2 == null;
-            else
-                return j1.CompareTo(j2) >= 0;
-        }
-
-        public static bool operator <=(Jeu j1, Jeu j2)
-        {
-            if (j1 == null)
-                return j2 == null;
-            else
-                return j1.CompareTo(j2) <= 0;
-        }
-
-        public static bool operator <(Jeu j1, Jeu j2)
-        {
-            if (j1 == null)
-                return false;
-            else
-                return j1.CompareTo(j2) == -1;
-        }
-
-
     }
 
     public enum Genre
     {
-        Default, Plateforme, Action_RPG, Action_Aventure, Football, Course_Auto, Compilation,Arcade
+        Action_aventure, Action_RPG, Arcade, Combat, Course, Societe, sport, Autres
     };
 }

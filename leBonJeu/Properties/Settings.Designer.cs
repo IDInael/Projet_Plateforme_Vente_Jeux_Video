@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace leBonJeu.Properties
+namespace LeBonJeu.Properties
 {
 
 
